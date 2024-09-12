@@ -70,3 +70,14 @@ bool Snake::checkSelfCollision() {
     return false;
 }
 
+void Snake::display() {
+    clearScreen();
+    // Start from the head
+    NodePtr current = head;
+    while (current != nullptr) {
+        // Move the cursor to the position of the current node
+        cout << "\033[" << current->y << ";" << current->x << "H" << "O";
+        current = current->next;
+    }
+    cout.flush();
+}
