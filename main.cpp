@@ -1,83 +1,145 @@
+#include <GLFW/glfw3.h>
 #include <iostream>
+#include <thread>
 
-using namespace std;
-
-// We first define the node (a piece of the snake)
 struct Node {
     int x, y;
     Node* next;
     Node(int x, int y) : x(x), y(y), next(nullptr) {}
 };
-// We define the NodePtr data type to avoid confusion between Node and Node*
+
 typedef Node* NodePtr;
 
-// We define the snake class with functions to initialize, mode, grow, check collision, and display the snake
 class Snake {
     private:
         NodePtr head;
         NodePtr tail;
         int length;
+        int dx, dy; // Direction of movement
     public:
-        Snake(int startX, int startY); // Constructor
-        void move(int dx, int dy);
+        Snake(int startX, int startY);
+        void move();
         void grow();
         bool checkSelfCollision();
         void display();
+        void setDirection(int dx, int dy);
 };
 
-void clearScreen() {
-    cout << "\033[2J\033[1;1H" << endl;
-}
-
-// We initialize the snake with starting coordinates, and a length of 1 node
 Snake::Snake(int startX, int startY) {
     head = new Node(startX, startY);
     tail = head;
     length = 1;
+    dx = 1; dy = 0; // Initial direction to the right
 }
 
-void Snake::move(int dx, int dy) {
-    // This part adds a head to the list
+void Snake::move() {
+    // Adding a new head
     NodePtr newHead = new Node(head->x + dx, head->y + dy);
     newHead->next = head;
     head = newHead;
-    // This part removes the tail from the list
+    // Adding a temp tail variable
     NodePtr tempTail = tail;
-    // Tail is updated to the next item in the list (node before the old tail)
+    // Equating the tail to the next node in the list (2nd-last node)
     tail = tail->next;
     delete tempTail;
 }
 
-// This function simply adds a tail to the list
 void Snake::grow() {
+    // Adding a new tail
     NodePtr newTail = new Node(tail->x, tail->y);
     tail->next = newTail;
     tail = newTail;
 }
 
-// This function checks if the snake has collided with itself
 bool Snake::checkSelfCollision() {
-    // We consider the node after the head
+    // Starting with the 2nd node in the list
     NodePtr current = head->next;
     while (current != nullptr) {
-        // If the 'current' coordinates match the 'head' coordinates, true is returned (head collided with the node)
+        // Collision occurs if the head and current node have the same coordinates
         if (head->x == current->x && head->y == current->y) {
             return true;
         }
-        // 'Current' points to the next node in the list
+        // If no collision is detected, we move to the next element in the list
         current = current->next;
     }
     return false;
 }
 
 void Snake::display() {
-    clearScreen();
-    // Start from the head
+    // Start with the head of the snake
     NodePtr current = head;
+    // Iterate through each segment of the snake
     while (current != nullptr) {
-        // Move the cursor to the position of the current node
-        cout << "\033[" << current->y << ";" << current->x << "H" << "O";
+        // Draw a rectangle for each segment of the snake
+        glRecti(current->x, current->y, current->x + 1, current->y + 1);
         current = current->next;
     }
-    cout.flush();
+}
+
+void Snake::setDirection(int dx, int dy) {
+    // Set the x-motion
+    this->dx = dx;
+    // Set the y-motion
+    this->dy = dy;
+}
+
+Snake snake(5, 5);
+
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    if (action == GLFW_PRESS) {
+        switch (key) {
+            case GLFW_KEY_UP:
+                snake.setDirection(0, 1);
+                break;
+            case GLFW_KEY_DOWN:
+                snake.setDirection(0, -1);
+                break;
+            case GLFW_KEY_LEFT:
+                snake.setDirection(-1, 0);
+                break;
+            case GLFW_KEY_RIGHT:
+                snake.setDirection(1, 0);
+                break;
+        }
+    }
+}
+
+int main() {
+    if (!glfwInit()) {
+        std::cerr << "Failed to initialize GLFW" << std::endl;
+        return -1;
+    }
+
+    GLFWwindow* window = glfwCreateWindow(800, 600, "Snake Game", nullptr, nullptr);
+    if (!window) {
+        std::cerr << "Failed to create GLFW window" << std::endl;
+        glfwTerminate();
+        return -1;
+    }
+
+    glfwMakeContextCurrent(window);
+    glfwSetKeyCallback(window, keyCallback);
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0, 20, 0, 20, -1, 1);
+
+    while (!glfwWindowShouldClose(window)) {
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        snake.move();
+        if (snake.checkSelfCollision()) {
+            break; // Game over
+        }
+        snake.display();
+
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    }
+
+    glfwDestroyWindow(window);
+    glfwTerminate();
+    return 0;
 }
