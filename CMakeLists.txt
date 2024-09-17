@@ -3,7 +3,9 @@ project(snake_ll)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(snake_ll main.cpp)
+add_executable(snake_ll main.cpp
+        Snake/Snake.cpp
+        Snake/Snake.h)
 
 add_library(glfw STATIC IMPORTED)
 set_target_properties(glfw PROPERTIES
