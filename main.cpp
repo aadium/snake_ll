@@ -37,11 +37,15 @@ void Snake::move() {
     NodePtr newHead = new Node(head->x + dx, head->y + dy);
     newHead->next = head;
     head = newHead;
-    // Adding a temp tail variable
-    NodePtr tempTail = tail;
-    // Equating the tail to the next node in the list (2nd-last node)
-    tail = tail->next;
-    delete tempTail;
+    // // Traverse to find the second-to-last node
+    // NodePtr current = head;
+    // while (current->next != tail) {
+    //     current = current->next;
+    // }
+    // // Update the tail and delete the old tail
+    // delete tail;
+    // tail = current;
+    // tail->next = nullptr;
 }
 
 void Snake::grow() {
@@ -70,8 +74,13 @@ void Snake::display() {
     NodePtr current = head;
     // Iterate through each segment of the snake
     while (current != nullptr) {
-        // Draw a rectangle for each segment of the snake
-        glRecti(current->x, current->y, current->x + 1, current->y + 1);
+        if (current == head) {
+            glColor3f(5.0f, 0.0f, 0.0f); //sets color
+            glRecti(current->x, current->y, current->x + 1, current->y + 1);
+        } else {
+            glColor3f(1.0f, 1.0f, 1.0f); //sets color
+            glRecti(current->x, current->y, current->x + 1, current->y + 1);
+        }
         current = current->next;
     }
 }
@@ -83,7 +92,7 @@ void Snake::setDirection(int dx, int dy) {
     this->dy = dy;
 }
 
-Snake snake(5, 5);
+Snake snake(1, 5);
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {
@@ -120,9 +129,14 @@ int main() {
     glfwMakeContextCurrent(window);
     glfwSetKeyCallback(window, keyCallback);
 
+    glViewport(0, 0, 800, 600);
+    glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int width, int height) {
+        glViewport(0, 0, width, height);
+    });
+
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(0, 20, 0, 20, -1, 1);
+    glOrtho(0, 30, 0, 30, -1, 1);
 
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT);
@@ -132,14 +146,13 @@ int main() {
             break; // Game over
         }
         snake.display();
-
-        glfwSwapBuffers(window);
         glfwPollEvents();
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        glfwSwapBuffers(window);
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
 
     glfwDestroyWindow(window);
+    glfwPollEvents();
     glfwTerminate();
     return 0;
 }
