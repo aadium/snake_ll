@@ -22,6 +22,9 @@ class Snake {
         bool checkSelfCollision();
         void display();
         void setDirection(int dx, int dy);
+        int getHeadX() const { return head->x; }
+        int getHeadY() const { return head->y; }
+        int getLength();
 };
 
 #endif

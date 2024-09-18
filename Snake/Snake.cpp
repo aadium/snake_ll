@@ -13,15 +13,15 @@ void Snake::move() {
     NodePtr newHead = new Node(head->x + dx, head->y + dy);
     newHead->next = head;
     head = newHead;
-    // // Traverse to find the second-to-last node
-    // NodePtr current = head;
-    // while (current->next != tail) {
-    //     current = current->next;
-    // }
-    // // Update the tail and delete the old tail
-    // delete tail;
-    // tail = current;
-    // tail->next = nullptr;
+    // Traverse to find the second-to-last node
+    NodePtr current = head;
+    while (current->next != tail) {
+        current = current->next;
+    }
+    // Update the tail and delete the old tail
+    delete tail;
+    tail = current;
+    tail->next = nullptr;
 }
 
 void Snake::grow() {
@@ -62,8 +62,15 @@ void Snake::display() {
 }
 
 void Snake::setDirection(int dx, int dy) {
-    // Set the x-motion
+    // Prevent setting the direction to the opposite of the current direction
+    if ((this->dx == 1 && dx == -1) || (this->dx == -1 && dx == 1) ||
+        (this->dy == 1 && dy == -1) || (this->dy == -1 && dy == 1)) {
+        return;
+    }
     this->dx = dx;
-    // Set the y-motion
     this->dy = dy;
+}
+
+int Snake::getLength() {
+    return this->length;
 }
