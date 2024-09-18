@@ -1,9 +1,12 @@
 #include <GLFW/glfw3.h>
+#include <GL/freeglut.h>
 #include <iostream>
 #include <thread>
 #include "Snake/Snake.h"
+#include "Food/Food.h"
 
 Snake snake(1, 5);
+Food food;
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {
@@ -24,11 +27,20 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
     }
 }
 
-int main() {
+void renderText(float x, float y, const std::string& text) {
+    glRasterPos2f(x, y);
+    for (char c : text) {
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
+    }
+}
+
+int main(int argc, char** argv) {
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW" << std::endl;
         return -1;
     }
+
+    glutInit(&argc, argv);
 
     GLFWwindow* window = glfwCreateWindow(800, 600, "Snake Game", nullptr, nullptr);
     if (!window) {
@@ -54,12 +66,23 @@ int main() {
 
         snake.move();
         if (snake.checkSelfCollision()) {
-            break; // Game over
+            break;
         }
+
+        // Check for collision with food
+        if (snake.getHeadX() == food.getX() && snake.getHeadY() == food.getY()) {
+            snake.grow();
+            food.generateNewPosition();
+        }
+
         snake.display();
+        food.display();
+
+        renderText(0.0f, 2.0f, "Score: " + std::to_string(snake.getLength() - 1));
+
         glfwPollEvents();
         glfwSwapBuffers(window);
-        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        std::this_thread::sleep_for(std::chrono::milliseconds(75));
     }
 
     glfwDestroyWindow(window);

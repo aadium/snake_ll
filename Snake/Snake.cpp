@@ -13,15 +13,15 @@ void Snake::move() {
     NodePtr newHead = new Node(head->x + dx, head->y + dy);
     newHead->next = head;
     head = newHead;
-    // // Traverse to find the second-to-last node
-    // NodePtr current = head;
-    // while (current->next != tail) {
-    //     current = current->next;
-    // }
-    // // Update the tail and delete the old tail
-    // delete tail;
-    // tail = current;
-    // tail->next = nullptr;
+    // Traverse to find the second-to-last node
+    NodePtr current = head;
+    while (current->next != tail) {
+        current = current->next;
+    }
+    // Update the tail and delete the old tail
+    delete tail;
+    tail = current;
+    tail->next = nullptr;
 }
 
 void Snake::grow() {
@@ -29,6 +29,7 @@ void Snake::grow() {
     NodePtr newTail = new Node(tail->x, tail->y);
     tail->next = newTail;
     tail = newTail;
+    length++;
 }
 
 bool Snake::checkSelfCollision() {
@@ -48,22 +49,35 @@ bool Snake::checkSelfCollision() {
 void Snake::display() {
     // Start with the head of the snake
     NodePtr current = head;
+    bool isLightRed = true; // Flag to alternate colors
     // Iterate through each segment of the snake
     while (current != nullptr) {
         if (current == head) {
-            glColor3f(5.0f, 0.0f, 0.0f); //sets color
-            glRecti(current->x, current->y, current->x + 1, current->y + 1);
+            glColor3f(5.0f, 0.0f, 0.0f); // Set color for the head
         } else {
-            glColor3f(1.0f, 1.0f, 1.0f); //sets color
-            glRecti(current->x, current->y, current->x + 1, current->y + 1);
+            if (isLightRed) {
+                glColor3f(1.0f, 0.8f, 0.8f); // Light red color
+            } else {
+                glColor3f(1.0f, 1.0f, 1.0f); // White color
+            }
+            isLightRed = !isLightRed; // Toggle the flag
         }
+
+        glRecti(current->x, current->y, current->x + 1, current->y + 1);
         current = current->next;
     }
 }
 
 void Snake::setDirection(int dx, int dy) {
-    // Set the x-motion
+    // Prevent setting the direction to the opposite of the current direction
+    if ((this->dx == 1 && dx == -1) || (this->dx == -1 && dx == 1) ||
+        (this->dy == 1 && dy == -1) || (this->dy == -1 && dy == 1)) {
+        return;
+    }
     this->dx = dx;
-    // Set the y-motion
     this->dy = dy;
+}
+
+int Snake::getLength() {
+    return this->length;
 }
