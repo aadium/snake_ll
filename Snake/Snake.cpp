@@ -1,10 +1,13 @@
 #include "Snake.h"
 #include <GLFW/glfw3.h>
+#include <chrono>
+#include <thread>
 
 Snake::Snake(int startX, int startY) {
     head = new Node(startX, startY);
     tail = head;
     length = 1;
+    collisionCount = 0;
     dx = 1; dy = 0; // Initial direction to the right
 }
 
@@ -32,13 +35,37 @@ void Snake::grow() {
     length++;
 }
 
+void Snake::changeDirectionOnCollision(int& dx, int& dy) {
+    // Sleep for 1 second to give the player time to react
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    // Change the direction of the snake when it collides with itself
+    if (dx == 1) {
+        dx = 0;
+        dy = -1;
+    } else if (dx == -1) {
+        dx = 0;
+        dy = 1;
+    } else if (dy == 1) {
+        dx = -1;
+        dy = 0;
+    } else if (dy == -1) {
+        dx = 1;
+        dy = 0;
+    }
+}
+
 bool Snake::checkSelfCollision() {
     // Starting with the 2nd node in the list
     NodePtr current = head->next;
     while (current != nullptr) {
         // Collision occurs if the head and current node have the same coordinates
         if (head->x == current->x && head->y == current->y) {
-            return true;
+            collisionCount++;
+            glColor3f(5.0f, 0.0f, 0.0f); // Set color for the head
+            if (collisionCount == 3) {
+                return true;
+            }
+            changeDirectionOnCollision(dx, dy);
         }
         // If no collision is detected, we move to the next element in the list
         current = current->next;
@@ -76,8 +103,4 @@ void Snake::setDirection(int dx, int dy) {
     }
     this->dx = dx;
     this->dy = dy;
-}
-
-int Snake::getLength() {
-    return this->length;
 }

@@ -14,17 +14,20 @@ class Snake {
         NodePtr head;
         NodePtr tail;
         int length;
+        int collisionCount;
         int dx, dy;
     public:
         Snake(int startX, int startY);
         void move();
         void grow();
         bool checkSelfCollision();
+        void changeDirectionOnCollision(int& dx, int& dy);
         void display();
         void setDirection(int dx, int dy);
         int getHeadX() const { return head->x; }
         int getHeadY() const { return head->y; }
-        int getLength();
+        int getLength() const { return length; }
+        int getCollisionCount() const { return collisionCount; }
 };
 
 #endif

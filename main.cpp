@@ -66,6 +66,7 @@ int main(int argc, char** argv) {
 
         snake.move();
         if (snake.checkSelfCollision()) {
+            
             break;
         }
 
@@ -79,6 +80,7 @@ int main(int argc, char** argv) {
         food.display();
 
         renderText(0.0f, 2.0f, "Score: " + std::to_string(snake.getLength() - 1));
+        renderText(0.0f, 3.0f, "Health: " + std::to_string(3 - snake.getCollisionCount()));
 
         glfwPollEvents();
         glfwSwapBuffers(window);
