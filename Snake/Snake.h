@@ -21,6 +21,7 @@ class Snake {
         void move();
         void grow();
         bool checkSelfCollision();
+        void checkWallCollision();
         void changeDirectionOnCollision(int& dx, int& dy);
         void display();
         void setDirection(int dx, int dy);

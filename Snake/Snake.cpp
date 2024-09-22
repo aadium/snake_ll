@@ -36,8 +36,6 @@ void Snake::grow() {
 }
 
 void Snake::changeDirectionOnCollision(int& dx, int& dy) {
-    // Sleep for 1 second to give the player time to react
-    std::this_thread::sleep_for(std::chrono::seconds(1));
     // Change the direction of the snake when it collides with itself
     if (dx == 1) {
         dx = 0;
@@ -60,17 +58,36 @@ bool Snake::checkSelfCollision() {
     while (current != nullptr) {
         // Collision occurs if the head and current node have the same coordinates
         if (head->x == current->x && head->y == current->y) {
+            // Sleep for 0.5 seconds before changing direction
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
             collisionCount++;
-            glColor3f(5.0f, 0.0f, 0.0f); // Set color for the head
             if (collisionCount == 3) {
                 return true;
             }
-            changeDirectionOnCollision(dx, dy);
         }
         // If no collision is detected, we move to the next element in the list
         current = current->next;
     }
     return false;
+}
+
+void Snake::checkWallCollision() {
+    if (head->x < 0 || head->x >= 30 || head->y < 0 || head->y >= 30) {
+        // Change direction by 90 degrees
+        if (dx == 1) { // Moving right
+            dx = 0;
+            dy = 1; // Turn down
+        } else if (dx == -1) { // Moving left
+            dx = 0;
+            dy = -1; // Turn up
+        } else if (dy == 1) { // Moving down
+            dx = -1;
+            dy = 0; // Turn left
+        } else if (dy == -1) { // Moving up
+            dx = 1;
+            dy = 0; // Turn right
+        }
+    }
 }
 
 void Snake::display() {

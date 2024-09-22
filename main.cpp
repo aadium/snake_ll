@@ -34,6 +34,29 @@ void renderText(float x, float y, const std::string& text) {
     }
 }
 
+void drawHealthBar(float x, float y, float width, float height, float healthPercentage) {
+    // Set the color for the health bar (green)
+    glColor3f(0.0f, 1.0f, 0.0f);
+
+    // Draw the background of the health bar (gray)
+    glBegin(GL_QUADS);
+    glColor3f(0.0f, 0.25f, 0.25f);
+    glVertex2f(x, y);
+    glVertex2f(x + width, y);
+    glVertex2f(x + width, y + height);
+    glVertex2f(x, y + height);
+    glEnd();
+
+    // Draw the foreground of the health bar (green) based on health percentage
+    glBegin(GL_QUADS);
+    glColor3f(0.0f, 1.0f, 0.0f);
+    glVertex2f(x, y);
+    glVertex2f(x + width * healthPercentage, y);
+    glVertex2f(x + width * healthPercentage, y + height);
+    glVertex2f(x, y + height);
+    glEnd();
+}
+
 int main(int argc, char** argv) {
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW" << std::endl;
@@ -65,8 +88,8 @@ int main(int argc, char** argv) {
         glClear(GL_COLOR_BUFFER_BIT);
 
         snake.move();
+        snake.checkWallCollision();
         if (snake.checkSelfCollision()) {
-            
             break;
         }
 
@@ -80,7 +103,10 @@ int main(int argc, char** argv) {
         food.display();
 
         renderText(0.0f, 2.0f, "Score: " + std::to_string(snake.getLength() - 1));
-        renderText(0.0f, 3.0f, "Health: " + std::to_string(3 - snake.getCollisionCount()));
+        
+        // Calculate health percentage (assuming max health is 3)
+        float healthPercentage = (3.0f - snake.getCollisionCount()) / 3.0f;
+        drawHealthBar(0.0f, 3.0f, 10.0f, 1.0f, healthPercentage);
 
         glfwPollEvents();
         glfwSwapBuffers(window);
