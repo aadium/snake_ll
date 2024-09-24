@@ -7,7 +7,9 @@ add_executable(snake_ll main.cpp
         Snake/Snake.cpp
         Snake/Snake.h
         Food/Food.cpp
-        Food/Food.h)
+        Food/Food.h
+        Bomb/Bomb.cpp
+        Bomb/Bomb.h)
 
 add_library(glfw STATIC IMPORTED)
 set_target_properties(glfw PROPERTIES

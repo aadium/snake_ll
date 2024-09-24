@@ -58,11 +58,26 @@ bool Snake::checkSelfCollision() {
     while (current != nullptr) {
         // Collision occurs if the head and current node have the same coordinates
         if (head->x == current->x && head->y == current->y) {
-            // Sleep for 0.5 seconds before changing direction
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            
+            for (int i = 0; i < 3; ++i) {  // Flash twice
+                // Flash red to indicate collision
+                glColor3f(1.0f, 0.0f, 0.0f);
+                glRecti(head->x, head->y, head->x + 1, head->y + 1);
+                glFlush();  // Make sure the drawing is completed
+                glfwSwapBuffers(glfwGetCurrentContext());  // Swap the buffers to show the red flash
+                std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+                // Optional: Reset the snake color to normal after each flash
+                glColor3f(1.0f, 1.0f, 1.0f);  // Normal snake color (e.g., green)
+                glRecti(head->x, head->y, head->x + 1, head->y + 1);
+                glFlush();
+                glfwSwapBuffers(glfwGetCurrentContext());  // Swap the buffers again to reset the color
+                std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            }
+
             collisionCount++;
             if (collisionCount == 3) {
-                return true;
+                return true;  // End game if collision count reaches 3
             }
         }
         // If no collision is detected, we move to the next element in the list

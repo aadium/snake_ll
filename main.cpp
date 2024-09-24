@@ -4,9 +4,11 @@
 #include <thread>
 #include "Snake/Snake.h"
 #include "Food/Food.h"
+#include "Bomb/Bomb.h"
 
 Snake snake(1, 5);
 Food food;
+Bomb bomb;
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {
@@ -57,6 +59,8 @@ void drawHealthBar(float x, float y, float width, float height, float healthPerc
     glEnd();
 }
 
+bool displayBomb = false;
+
 int main(int argc, char** argv) {
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW" << std::endl;
@@ -104,10 +108,22 @@ int main(int argc, char** argv) {
         if (snake.getHeadX() == food.getX() && snake.getHeadY() == food.getY()) {
             snake.grow();
             food.generateNewPosition();
+            int randInt = rand() % 2;
+            displayBomb = (randInt == 0);
+        }
+
+        // Check for collision with bomb
+        if (snake.getHeadX() == bomb.getX() && snake.getHeadY() == bomb.getY()) {
+            bomb.explode();
+            std::this_thread::sleep_for(std::chrono::milliseconds(200));
+            break;
         }
 
         snake.display();
         food.display();
+        if (displayBomb) {
+            bomb.display();
+        }
 
         glfwPollEvents();
         glfwSwapBuffers(window);
