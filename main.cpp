@@ -113,10 +113,12 @@ int main(int argc, char** argv) {
         }
 
         // Check for collision with bomb
-        if (snake.getHeadX() == bomb.getX() && snake.getHeadY() == bomb.getY()) {
-            bomb.explode();
-            std::this_thread::sleep_for(std::chrono::milliseconds(200));
-            break;
+        if (displayBomb) {
+            if (snake.getHeadX() == bomb.getX() && snake.getHeadY() == bomb.getY()) {
+                bomb.explode();
+                std::this_thread::sleep_for(std::chrono::milliseconds(200));
+                break;
+            }
         }
 
         snake.display();
