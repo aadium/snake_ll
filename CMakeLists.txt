@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.0)
 project(snake_ll)
 
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
+set(BUILD_SHARED_LIBS OFF)
+set(CMAKE_EXE_LINKER_FLAGS "-static")
 
 add_executable(snake_ll main.cpp
         Snake/Snake.cpp
@@ -24,4 +27,4 @@ set_target_properties(freeglut PROPERTIES
 )
 
 find_package(OpenGL REQUIRED)
-target_link_libraries(snake_ll glfw freeglut OpenGL::GL)
+target_link_libraries(snake_ll glfw freeglut OpenGL::GL -static)
