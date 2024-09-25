@@ -22,9 +22,12 @@ set_target_properties(glfw PROPERTIES
 
 add_library(freeglut STATIC IMPORTED)
 set_target_properties(freeglut PROPERTIES
-        IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/freeglut/lib/libfreeglut.dll.a"
+        IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/freeglut/lib/libfreeglut_static.a"
         INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/freeglut/include"
 )
 
 find_package(OpenGL REQUIRED)
-target_link_libraries(snake_ll glfw freeglut OpenGL::GL -static)
+
+target_compile_definitions(snake_ll PRIVATE FREEGLUT_STATIC)
+
+target_link_libraries(snake_ll glfw freeglut OpenGL::GL winmm -static)
