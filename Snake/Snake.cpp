@@ -59,7 +59,7 @@ bool Snake::checkSelfCollision() {
         // Collision occurs if the head and current node have the same coordinates
         if (head->x == current->x && head->y == current->y) {
             
-            for (int i = 0; i < 3; ++i) {  // Flash twice
+            for (int i = 0; i < 3; ++i) {  // Flash
                 // Flash red to indicate collision
                 glColor3f(1.0f, 0.0f, 0.0f);
                 glRecti(head->x, head->y, head->x + 1, head->y + 1);
