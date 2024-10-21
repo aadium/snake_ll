@@ -91,6 +91,8 @@ int main(int argc, char** argv) {
     glLoadIdentity();
     glOrtho(0, 30, 0, 30, -1, 1);
 
+    int speed = 75;
+
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -144,9 +146,21 @@ int main(int argc, char** argv) {
             healthKit.display();
         }
 
+        if (snake.getLength() > 40) {
+            speed = 40;
+        } else if (snake.getLength() > 30) {
+            speed = 45;
+        } else if (snake.getLength() > 20) {
+            speed = 50;
+        } else if (snake.getLength() > 10) {
+            speed = 60;
+        } else {
+            speed = 70;
+        }
+
         glfwPollEvents();
         glfwSwapBuffers(window);
-        std::this_thread::sleep_for(std::chrono::milliseconds(75));
+        std::this_thread::sleep_for(std::chrono::milliseconds(speed));
     }
 
     glfwDestroyWindow(window);
