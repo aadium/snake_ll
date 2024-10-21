@@ -86,6 +86,12 @@ bool Snake::checkSelfCollision() {
     return false;
 }
 
+void Snake::heal() {
+    if (collisionCount > 0) {
+        collisionCount--;
+    }
+}
+
 void Snake::checkWallCollision() {
     if (head->x < 0 || head->x >= 30 || head->y < 0 || head->y >= 30) {
         // Change direction by 90 degrees

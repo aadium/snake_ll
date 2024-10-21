@@ -24,6 +24,7 @@ class Snake {
         void checkWallCollision();
         void changeDirectionOnCollision(int& dx, int& dy);
         void display();
+        void heal();
         void setDirection(int dx, int dy);
         int getHeadX() const { return head->x; }
         int getHeadY() const { return head->y; }

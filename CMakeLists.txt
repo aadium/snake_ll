@@ -11,6 +11,8 @@ add_executable(snake_ll main.cpp
         Snake/Snake.h
         Food/Food.cpp
         Food/Food.h
+        HealthKit/HealthKit.cpp
+        HealthKit/HealthKit.h
         Bomb/Bomb.cpp
         Bomb/Bomb.h)
 

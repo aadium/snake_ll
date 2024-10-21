@@ -5,10 +5,12 @@
 #include "Snake/Snake.h"
 #include "Food/Food.h"
 #include "Bomb/Bomb.h"
+#include "HealthKit/HealthKit.h"
 
 Snake snake(1, 5);
 Food food;
 Bomb bomb;
+HealthKit healthKit;
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {
@@ -60,6 +62,7 @@ void drawHealthBar(float x, float y, float width, float height, float healthPerc
 }
 
 bool displayBomb = false;
+bool displayHealthKit = false;
 
 int main(int argc, char** argv) {
     if (!glfwInit()) {
@@ -110,6 +113,8 @@ int main(int argc, char** argv) {
             food.generateNewPosition();
             int randInt = rand() % 2;
             displayBomb = (randInt == 0);
+            int randInt2 = rand() % 3;
+            displayHealthKit = (randInt2 == 0);
         }
 
         // Check for collision with bomb
@@ -121,10 +126,22 @@ int main(int argc, char** argv) {
             }
         }
 
+        // Check for collision with health kit
+        if (displayHealthKit) {
+            if (snake.getHeadX() == healthKit.getX() && snake.getHeadY() == healthKit.getY()) {
+                snake.heal();
+                displayHealthKit = false;
+                healthKit.generateNewPosition();
+            }
+        }
+
         snake.display();
         food.display();
         if (displayBomb) {
             bomb.display();
+        }
+        if (displayHealthKit) {
+            healthKit.display();
         }
 
         glfwPollEvents();
