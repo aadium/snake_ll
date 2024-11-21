@@ -16,12 +16,12 @@ void Bomb::generateNewPosition() {
 
 
 void Bomb::display() {
-    // Draw the base of the landmine (smaller, fitting within 1x1 size)
-    glColor3f(0.3f, 0.0f, 0.0f);  // Dark grey for the landmine base
-    glRecti(x, y, x + 1, y + 1);  // Base is 1x1 in size
+    // Draw the base of the bomb (1x1 square)
+    glColor3f(0.3f, 0.0f, 0.0f);  // Dark grey base
+    glRecti(x, y, x + 1, y + 1);
 
-    // Draw the border around the base (to emphasize the landmine shape)
-    glColor3f(1.0f, 0.5f, 0.0f);  // White border
+    // Draw a border around the base
+    glColor3f(1.0f, 0.5f, 0.0f);  // Orange border
     glLineWidth(4.0f);
     glBegin(GL_LINE_LOOP);
     glVertex2i(x, y);
@@ -30,9 +30,37 @@ void Bomb::display() {
     glVertex2i(x, y + 1);
     glEnd();
 
-    // Draw the trigger plate (centered, small portion of the landmine)
-    glColor3f(0.8f, 0.8f, 0.8f);  // Light grey for the trigger plate
-    glRecti(x + 0.3f, y + 0.3f, x + 0.7f, y + 0.7f);  // Trigger plate smaller and centered
+    // Draw the trigger plate (centered)
+    glColor3f(0.8f, 0.8f, 0.8f);  // Light grey
+    glRecti(x + 0.3f, y + 0.3f, x + 0.7f, y + 0.7f);
+
+    // Draw a warning triangle (yellow with black outline)
+    glColor3f(1.0f, 1.0f, 0.0f);  // Yellow triangle
+    glBegin(GL_TRIANGLES);
+    glVertex2f(x + 0.5f, y + 0.8f);  // Top vertex
+    glVertex2f(x + 0.2f, y + 0.2f);  // Bottom-left vertex
+    glVertex2f(x + 0.8f, y + 0.2f);  // Bottom-right vertex
+    glEnd();
+
+    // Draw black outline for the warning triangle
+    glColor3f(0.0f, 0.0f, 0.0f);  // Black outline
+    glLineWidth(2.0f);
+    glBegin(GL_LINE_LOOP);
+    glVertex2f(x + 0.5f, y + 0.8f);  
+    glVertex2f(x + 0.2f, y + 0.2f);  
+    glVertex2f(x + 0.8f, y + 0.2f);  
+    glEnd();
+
+    // Draw a lightning bolt inside the triangle (optional)
+    glColor3f(0.0f, 0.0f, 0.0f);  // Black lightning bolt
+    glBegin(GL_LINES);
+    glVertex2f(x + 0.45f, y + 0.75f);  // Top segment
+    glVertex2f(x + 0.55f, y + 0.55f);
+    glVertex2f(x + 0.55f, y + 0.55f);  // Bottom segment
+    glVertex2f(x + 0.4f, y + 0.3f);
+    glEnd();
+
+    glColor3f(0.0f, 1.0f, 0.0f);  // Reset color (optional)
 }
 
 void Bomb::explode() {

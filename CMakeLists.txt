@@ -9,6 +9,9 @@ set(CMAKE_EXE_LINKER_FLAGS "-static")
 add_executable(snake_ll main.cpp
         Snake/Snake.cpp
         Food/Food.cpp
+        Food/Food.h
+        HealthKit/HealthKit.cpp
+        HealthKit/HealthKit.h
         Bomb/Bomb.cpp
         HealthKit/HealthKit.cpp)
 
