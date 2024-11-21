@@ -8,11 +8,9 @@ set(CMAKE_EXE_LINKER_FLAGS "-static")
 
 add_executable(snake_ll main.cpp
         Snake/Snake.cpp
-        Snake/Snake.h
         Food/Food.cpp
-        Food/Food.h
         Bomb/Bomb.cpp
-        Bomb/Bomb.h)
+        HealthKit/HealthKit.cpp)
 
 add_library(glfw STATIC IMPORTED)
 set_target_properties(glfw PROPERTIES

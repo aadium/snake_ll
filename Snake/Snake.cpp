@@ -35,6 +35,12 @@ void Snake::grow() {
     length++;
 }
 
+void Snake::heal() {
+    if (collisionCount > 0) {
+        collisionCount--;
+    }
+}
+
 void Snake::changeDirectionOnCollision(int& dx, int& dy) {
     // Change the direction of the snake when it collides with itself
     if (dx == 1) {
