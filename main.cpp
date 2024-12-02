@@ -96,7 +96,7 @@ int main(int argc, char** argv) {
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT);
 
-        renderText(0.0f, 2.0f, "Score: " + std::to_string(snake.getLength() - 1));
+        renderText(0.0f, 2.0f, "Score: " + std::to_string(snake.getLength() - 4));
         renderText(0.0f, 6.0f, "Health:");
         
         // Calculate health percentage (assuming max health is 3)

@@ -20,7 +20,6 @@ class Snake {
         Snake(int startX, int startY);
         void move();
         void grow();
-        void heal();
         bool checkSelfCollision();
         void checkWallCollision();
         void changeDirectionOnCollision(int& dx, int& dy);

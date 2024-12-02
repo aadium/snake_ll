@@ -5,10 +5,18 @@
 
 Snake::Snake(int startX, int startY) {
     head = new Node(startX, startY);
-    tail = head;
-    length = 1;
+    NodePtr current = head;
+
+    for (int i = 1; i < 4; ++i) {
+        NodePtr newNode = new Node(startX - i, startY);
+        current->next = newNode;
+        current = newNode;
+    }
+
+    tail = current;
+    length = 4;
     collisionCount = 0;
-    dx = 1; dy = 0; // Initial direction to the right
+    dx = 1; dy = 0;
 }
 
 void Snake::move() {
@@ -33,12 +41,6 @@ void Snake::grow() {
     tail->next = newTail;
     tail = newTail;
     length++;
-}
-
-void Snake::heal() {
-    if (collisionCount > 0) {
-        collisionCount--;
-    }
 }
 
 void Snake::changeDirectionOnCollision(int& dx, int& dy) {
